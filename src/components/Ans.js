@@ -9,6 +9,7 @@ import { AuthContext } from "../context/auth";
 import { useContext, useState, useEffect } from "react";
 import { getDoc, deleteDoc, arrayUnion, arrayRemove, doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../firebase';
+import Answerfunction from './Answerfunction';
 
 function Ans({answerData, userData, questionData}){
     const { user} = useContext(AuthContext);
@@ -22,6 +23,7 @@ function Ans({answerData, userData, questionData}){
 
 
     useEffect(()=>{
+        // console.log("I'm running");
         (async()=>{
             const docRef = doc(db, "answers", answerData.ansId);
             const docSnap = await getDoc(docRef);
@@ -30,22 +32,22 @@ function Ans({answerData, userData, questionData}){
             }
 
             //making the changes
-            if(answerPost?.upvotes?.includes(user?.uid)){
-               setUpvote(true);
-            }
-            else{
-               setUpvote(false);
-            }
+            // if(answerPost?.upvotes?.includes(user?.uid)){
+            //    setUpvote(true);
+            // }
+            // else{
+            //    setUpvote(false);
+            // }
 
-            if(answerPost?.downvotes?.includes(user?.uid)){
-               setDownvote(true);
-            }
-            else{
-              setDownvote(false);
-            }
+            // if(answerPost?.downvotes?.includes(user?.uid)){
+            //    setDownvote(true);
+            // }
+            // else{
+            //   setDownvote(false);
+            // }
 
         })(); 
-    })
+    }, [answerData])
     
     const handleDelete = async()=>{
         if(user?.uid == answerPost?.uid){
@@ -64,44 +66,44 @@ function Ans({answerData, userData, questionData}){
         
     }
 
-    const handleUpvote = async()=>{
-        if(updisable == false){
-            setDowndisable(true);
-        if(!upvote){
-            await updateDoc(doc(db, "answers", answerPost?.ansId),{
-                upvotes: arrayUnion(user?.uid)
-            })
-            console.log(answerPost?.upvotes?.length)
-        }
-        else{
-            setDowndisable(false);
-            await updateDoc(doc(db, "answers", answerPost?.ansId),{
-              upvotes: arrayRemove(user?.uid)
-            })
-        }
-    }
-}
+//     const handleUpvote = async()=>{
+//         if(updisable == false){
+//             setDowndisable(true);
+//         if(!upvote){
+//             await updateDoc(doc(db, "answers", answerPost?.ansId),{
+//                 upvotes: arrayUnion(user?.uid)
+//             })
+//             console.log(answerPost?.upvotes?.length)
+//         }
+//         else{
+//             setDowndisable(false);
+//             await updateDoc(doc(db, "answers", answerPost?.ansId),{
+//               upvotes: arrayRemove(user?.uid)
+//             })
+//         }
+//     }
+// }
 
-    const handleDownvote = async()=>{
-        if(downdisable == false){
-            setUpdisable(true);
-        if(!downvote){
-             await updateDoc(doc(db, "answers", answerPost?.ansId),{
-                downvotes: arrayUnion(user?.uid)
-              })
-        }
-        else{
-            setUpdisable(false);
-            await updateDoc(doc(db, "answers", answerPost?.ansId),{
-               downvotes: arrayRemove(user?.uid)
-            })
-        }
-    }
-}
+//     const handleDownvote = async()=>{
+//         if(downdisable == false){
+//             setUpdisable(true);
+//         if(!downvote){
+//              await updateDoc(doc(db, "answers", answerPost?.ansId),{
+//                 downvotes: arrayUnion(user?.uid)
+//               })
+//         }
+//         else{
+//             setUpdisable(false);
+//             await updateDoc(doc(db, "answers", answerPost?.ansId),{
+//                downvotes: arrayRemove(user?.uid)
+//             })
+//         }
+//     }
+// }
 
     const date = (answerPost?.timestamp?.toDate().toDateString());
     const time = (answerPost?.timestamp?.toDate().toLocaleTimeString('en-US'));
-
+    // console.log("I am speaking from Ans.js");
     return(
         <>
        
@@ -117,7 +119,8 @@ function Ans({answerData, userData, questionData}){
                 style={{fontSize:'17px'}}>{answerData?.ansInput}</div>
           
             <div className="ans-icons">
-            <div className="upvote-icon" style={{paddingRight:'10px', display:'flex'}}>
+            <Answerfunction answerData={answerData} />
+            {/* <div className="upvote-icon" style={{paddingRight:'10px', display:'flex'}}>
             <Tooltip title="Upvote Ans">
                    <ArrowCircleUpIcon onClick={handleUpvote} style={upvote?{color:"red"}:{color:"grey"}}/>
                    </Tooltip>
@@ -129,7 +132,7 @@ function Ans({answerData, userData, questionData}){
                     <ArrowCircleDownIcon onClick={handleDownvote} style={downvote?{color:"red"}:{color:"grey"}}/>
                     </Tooltip>
                     {answerPost?.downvotes?.length>0 && answerPost?.downvotes?.length}
-                    </div> 
+                    </div>  */}
 
                     {
                         (user?.uid == answerPost?.uid) ? 

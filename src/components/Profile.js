@@ -11,6 +11,7 @@ function Profile(){
       router('/login');
       return null;
     }
+    console.log("I am speaking from profile");
     return(
         <>
         {
